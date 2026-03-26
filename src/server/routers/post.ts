@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { prisma } from "@/lib/prisma";
 
 const createPostSchema = z.object({
@@ -87,22 +87,14 @@ export const postRouter = router({
       return post;
     }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(createPostSchema)
-    .mutation(async ({ input }) => {
-      const existing = await prisma.post.findUnique({
-        where: { slug: input.slug },
-      });
-
-      if (existing) {
-        throw new Error("A post with this slug already exists");
-      }
-
+    .mutation(async ({ input, ctx }) => {
       return await prisma.post.create({
         data: {
           ...input,
-          publishedAt: input.status === 'published'? new Date() : null,
-          authorId: 'placeholder'
+          authorId: ctx.session.user.id,
+          publishedAt: input.status === 'published' ? new Date(): null,
         },
       })
     }),

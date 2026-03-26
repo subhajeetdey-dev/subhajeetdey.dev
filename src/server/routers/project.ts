@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { prisma } from "@/lib/prisma";
 
 const createProjectSchema = z.object({
@@ -47,24 +47,17 @@ export const projectRouter = router({
       });
     }),
 
-  create: publicProcedure
-    .input(createProjectSchema)
-    .mutation(async ({ input }) => {
-      const existing = await prisma.project.findFirst({
-        where: { name: input.name },
-      });
-
-      if (existing) {
-        throw new Error("A project with this name already exists");
-      }
-
-      return await prisma.project.create({
-        data: {
-          ...input,
-          authorId: "placeholder",
-        },
-      });
-    }),
+  create: protectedProcedure
+      .input(createProjectSchema)
+      .mutation(async ({ input, ctx }) => {
+        return await prisma.project.create({
+          data: {
+            ...input,
+            authorId: ctx.session.user.id,
+            publishedAt: input.status === 'published' ? new Date(): null,
+          },
+        })
+      }),
 
   update: publicProcedure
     .input(updateProjectSchema)
