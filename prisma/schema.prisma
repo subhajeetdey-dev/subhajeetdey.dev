@@ -12,6 +12,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]
+  projects      Project[]
+  cratedAt      DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -44,18 +58,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
-  projects      Project[]
 }
 
 model Post {
