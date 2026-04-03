@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { ArrowRight, PencilLine, SquareChartGantt, Settings } from 'lucide-react';
-import { act } from 'react';
 
 
 async function getStats() {
