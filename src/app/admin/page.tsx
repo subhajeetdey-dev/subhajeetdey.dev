@@ -105,16 +105,19 @@ export default async function AdminDashBoard(){
 
             <div className='grid grid-cols-3 gap-4 mt-4'>
                 {[
-                    {label: `<PencilLine /> {'Write new post'}`, href: '/admin/posts/new'},
-                    {label: `<SquareChartGantt /> {'Add project'}`, href: '/admin/projects/new'},
-                    {label: `<Settings /> {'Site settings'}`, href: '/admin/settings'},
+                    {label: 'Write new post', icon: <PencilLine />, href: '/admin/posts/new'},
+                    {label: 'Add project', icon: <SquareChartGantt />, href: '/admin/projects/new'},
+                    {label: 'Site settings', icon: <Settings />, href: '/admin/settings'},
                 ].map((action) => (
                     <Link
                     key={action.href}
                     href={action.href}
                     className='bg-gray-900 border border-gray-800 rounded-xl p-4 text-sm text-gray-400 hover:text-gray-100 hover:border-gray-700 transition-all'
                     >
+                        <div className='flex items-center gap-2'>
+                            {action.icon}
                         {action.label}
+                        </div>
                     </Link>
                 ))}
             </div>
