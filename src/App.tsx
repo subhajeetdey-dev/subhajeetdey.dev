@@ -3,9 +3,12 @@ import { useDarkMode } from "./hooks/useDarkMode";
 import { defaultData } from "./data/defaultData";
 import type { PortfolioData } from "./types/portfolio.types";
 
-
 import { Navbar } from "./components/Navbar";
 import { HeroSection } from "./components/sections/HeroSection";
+import { WorkSection } from "./components/sections/WorkSection";
+import { SkillsSection } from "./components/sections/SkillsSection";
+import { AboutSection } from "./components/sections/AboutSection";
+import { ContactSection } from "./components/sections/ContactSection";
 
 export default function Portfolio() {
   const { dark, toggle } = useDarkMode();
@@ -14,7 +17,7 @@ export default function Portfolio() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const [contactSend, setContactSend] = useState(false);
+  const [contactSent, setContactSent] = useState(false);
   const [emailVal, setEmailVal] = useState("");
   const [skillFilter, setSkillFilter] = useState<
     "all" | "backend" | "frontend"
@@ -25,6 +28,14 @@ export default function Portfolio() {
       .getElementById(id)
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
     setMobileMenuOpen(false);
+  };
+
+  const handleContact = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailVal) return;
+    setContactSent(true);
+    setEmailVal("");
+    setTimeout(() => setContactSent(false), 3000);
   };
 
   const bg = dark ? "#080808" : "#f7f7f5";
@@ -51,7 +62,49 @@ export default function Portfolio() {
 
       <main>
         <HeroSection
-        data={data} dark={dark} scrollTo={scrollTo} textCol={textCol} mutedCol={mutedCol} borderCol={borderCol}
+          data={data}
+          dark={dark}
+          scrollTo={scrollTo}
+          textCol={textCol}
+          mutedCol={mutedCol}
+          borderCol={borderCol}
+        />
+
+        {/* <WorkSection
+          projects={data.projects}
+          dark={dark}
+          skillFilter={skillFilter}
+          setSkillFilter={setSkillFilter}
+          borderCol={borderCol}
+          mutedCol={mutedCol}
+        /> */}
+
+        <SkillsSection
+          skills={data.skills}
+          dark={dark}
+          bg={bg}
+          borderCol={borderCol}
+          mutedCol={mutedCol}
+        />
+
+        <AboutSection
+          data={data}
+          dark={dark}
+          borderCol={borderCol}
+          mutedCol={mutedCol}
+          textCol={textCol}
+        />
+
+        <ContactSection
+          data={data}
+          dark={dark}
+          emailVal={emailVal}
+          setEmailVal={setEmailVal}
+          contactSent={contactSent}
+          handleContact={handleContact}
+          borderCol={borderCol}
+          mutedCol={mutedCol}
+          textCol={textCol}
         />
       </main>
     </>

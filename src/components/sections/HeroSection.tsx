@@ -4,7 +4,6 @@ import { CodeLine } from "../ui/CodeLine";
 import { accentPalette } from "../../constants/theme";
 import type { PortfolioData } from "../../types/portfolio.types";
 import { FaArrowRight } from "react-icons/fa";
-import { div } from "framer-motion/client";
 
 interface HeroSectionProps {
   data: PortfolioData;

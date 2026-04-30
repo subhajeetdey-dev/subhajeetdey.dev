@@ -81,12 +81,12 @@ export function Navbar({
           </span>
         </button>
 
-        <nav className="items-start hidden gap-1 md:flex">
+        <nav className="items-start hidden gap-3 md:flex">
           {navLinks.map((l) => (
             <button
               key={l.id}
               onClick={() => scrollTo(l.id)}
-              className="px-4 py-2 text-sm font-medium transition-all rounded-full"
+              className="px-4 py-2 text-sm font-medium transition-all rounded-full cursor-pointer"
               style={{
                 color: activeSection === l.id ? "#ef233c" : mutedCol,
                 background:
