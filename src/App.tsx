@@ -4,11 +4,13 @@ import { defaultData } from "./data/defaultData";
 import type { PortfolioData } from "./types/portfolio.types";
 
 import { Navbar } from "./components/Navbar";
+import { CMSPanel } from "./components/CMSPanel";
 import { HeroSection } from "./components/sections/HeroSection";
 import { WorkSection } from "./components/sections/WorkSection";
 import { SkillsSection } from "./components/sections/SkillsSection";
 import { AboutSection } from "./components/sections/AboutSection";
 import { ContactSection } from "./components/sections/ContactSection";
+import { Footer } from "./components/Footer";
 
 export default function Portfolio() {
   const { dark, toggle } = useDarkMode();
@@ -44,7 +46,7 @@ export default function Portfolio() {
   const borderCol = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
 
   return (
-    <>
+    <div>
       <Navbar
         dark={dark}
         toggle={toggle}
@@ -107,6 +109,20 @@ export default function Portfolio() {
           textCol={textCol}
         />
       </main>
-    </>
+
+      <Footer
+        data={data}
+        dark={dark}
+        scrollTo={scrollTo}
+        borderCol={borderCol}
+        mutedCol={mutedCol}
+        textCol={textCol}
+      />
+      {
+        cmsOpen && (
+          <CMSPanel data={data} setData={setData} onClose={() => setCmsOpen(false)} dark={dark}/>
+        )
+      }
+    </div>
   );
 }
