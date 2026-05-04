@@ -16,8 +16,7 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const { ref, visible } = useReveal();
   const accent = accentPalette[project.accent];
-  const badge = typeBadge[project.type];
-
+  const badge = typeBadge[project.type] ?? { label: project.type, color: "#71717a" };
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const el = cardRef.current;
     if (!el) return;

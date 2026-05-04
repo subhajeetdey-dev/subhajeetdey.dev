@@ -11,7 +11,7 @@ interface NavbarProps {
   activeSection: string;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
-  setCMSOpen: (open: boolean) => void;
+  setCmsOpen: (open: boolean) => void;
   scrollTo: (id: string) => void;
   data: PortfolioData;
   borderCol: string;
@@ -33,7 +33,7 @@ export function Navbar({
   activeSection,
   mobileMenuOpen,
   setMobileMenuOpen,
-  setCMSOpen,
+  setCmsOpen,
   scrollTo,
   data,
   borderCol,
@@ -115,7 +115,7 @@ export function Navbar({
             {dark ? <Sun /> : <BsMoonStarsFill />}
           </button>
           <button
-            onClick={() => setCMSOpen(true)}
+            onClick={() => setCmsOpen(true)}
             className="items-center hidden md:flex gap-1.5 px-4 py-2 rounded-full text-xs font-mono transition-all border"
             style={{ borderColor: borderCol, color: mutedCol }}
           >
@@ -151,7 +151,7 @@ export function Navbar({
                 </button>
             ))}
             <button
-            onClick={() => {setCMSOpen(true); setMobileMenuOpen(false);}}
+            onClick={() => {setCmsOpen(true); setMobileMenuOpen(false);}}
             className="py-2.5 text-sm font-mono text-left"
             style={{color: mutedCol}}
             >
