@@ -73,7 +73,7 @@ export function Footer({
           <div className="flex flex-col gap-3">
             {navLinks.map((l) => (
               <button
-                id={l.id}
+                key={l.id}
                 onClick={() => scrollTo(l.id)}
                 className="w-16 font-mono text-sm text-left transition-colors cursor-pointer"
                 style={{ color: mutedCol }}
