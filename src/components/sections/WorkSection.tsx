@@ -5,8 +5,8 @@ import type { Project } from "../../types/portfolio.types";
 interface WorkSectionProps {
   projects: Project[];
   dark: boolean;
-  skillFilter: "all" | "backend" | "frontend";
-  setSkillFilter: (f: "all" | "backend" | "frontend") => void;
+  skillFilter: "all" | "full-stack" | "backend" | "frontend";
+  setSkillFilter: (f: "all" | "full-stack" | "backend" | "frontend") => void;
   borderCol: string;
   mutedCol: string;
 }
@@ -31,7 +31,7 @@ export function WorkSection({
         <SectionHeader label="selected work" dark={dark}>
           Projects I've <span style={{ color: "#ef233c" }}>Built</span>
           <div className="flex justify-center gap-2 mt-6 mb-12">
-            {(["all", "backend", "frontend"] as const).map((f) => (
+            {(["all", "full-stack", "backend", "frontend"] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setSkillFilter(f)}
