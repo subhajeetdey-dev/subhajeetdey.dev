@@ -84,7 +84,7 @@ export function ContactSection({
           />
           <button
             type="submit"
-            className="px-8 py-4 text-base font-bold text-white transition-all rounded-full"
+            className="px-8 py-4 text-base font-bold text-white transition-all rounded-full cursor-pointer"
             style={{
               background: contactSent ? "#22c55e" : "#ef233c",
               whiteSpace: "nowrap",

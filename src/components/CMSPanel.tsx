@@ -74,7 +74,7 @@ export function CMSPanel({ data, setData, onClose, dark }: CMSPanelProps) {
   >("meta");
   const [saved, setSaved] = useState(false);
 
-  const bg = dark ? "0a0a0a" : "#fff";
+  const bg = dark ? "#0a0a0a" : "#fff";
   const textCol = dark ? "#e4e4e7" : "#18181b";
   const mutedCol = dark ? "#52525b" : "#a3a3a3";
   const borderCol = dark ? "#1f1f1f" : "#e5e7eb";
@@ -89,8 +89,7 @@ export function CMSPanel({ data, setData, onClose, dark }: CMSPanelProps) {
   ) => {
     setData((prev) => ({
       ...prev,
-      [section]: { ...(prev[section] as object) },
-      [key]: val,
+      [section]: { ...(prev[section] as object), [key]: val },
     }));
   };
 
@@ -106,7 +105,7 @@ export function CMSPanel({ data, setData, onClose, dark }: CMSPanelProps) {
       return { ...prev, [section]: arr };
     });
   };
-
+  
   return (
     <div className="fixed inset-0 z-50 flex items-stretch">
       <div className="flex-1 bg-black/70 backdrop-blur-sm" onClick={onClose} />
@@ -116,40 +115,42 @@ export function CMSPanel({ data, setData, onClose, dark }: CMSPanelProps) {
         style={{ background: bg, borderLeft: `1px solid ${borderCol}` }}
       >
         <div
-          className="flex flex-col items-center justify-between px-6 py-4 border-b"
+          className="flex items-center justify-between px-6 py-4 border-b shrink-0"
           style={{ borderColor: borderCol }}
         >
-          <div>
+          
+          <div className="flex items-center justify-between w-full">
             <div
               className="font-mono text-sm font-bold"
               style={{ color: textCol }}
             >
-              <span className="flex items-center justify-center gap-1">
-                <Sparkle />
+              <span className="flex items-center gap-1">
+                <Sparkle size={14}/>
                 CMS Editor
               </span>
-            </div>
-            <div
+              <div
               className="text-[11px] font-mono mt-0.5"
               style={{ color: mutedCol }}
             >
               // edit portfolio
             </div>
+            </div>
+            
             <div className="flex items-center gap-2">
               <button
                 onClick={() => {
                   setSaved(true);
                   setTimeout(() => setSaved(false), 200);
                 }}
-                className="px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all"
+                className="px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer"
                 style={{
                   background: saved ? "#22c55e" : "#ef233c",
                   color: "#fff",
                 }}
               >
                 {saved ? (
-                  <span className="flex items-center justify-center gap-1">
-                    <Check size={16} strokeWidth={3} />
+                  <span className="flex items-center gap-1">
+                    <Check size={12} strokeWidth={3} />
                     saved
                   </span>
                 ) : (
@@ -158,17 +159,22 @@ export function CMSPanel({ data, setData, onClose, dark }: CMSPanelProps) {
               </button>
               <button
                 onClick={onClose}
-                className="flex items-center justify-center font-mono text-xs rounded-full w-7 h-7"
+                className="flex items-center justify-center font-mono text-xs rounded-full cursor-pointer w-7 h-7"
                 style={{ background: inputBg, color: mutedCol }}
               >
-                <X size={16} strokeWidth={3} />
+                <X size={14} strokeWidth={3} />
               </button>
             </div>
+            
           </div>
-          <div
-            className="flex gap-1 px-4 py-2 overflow-x-auto border-b"
-            style={{ borderColor: borderCol }}
-          >
+
+          
+        </div>
+
+        <div
+          className="flex gap-1 px-4 py-2 overflow-x-auto border-b shrink-0"
+          style={{ borderColor: borderCol }}
+        >
             {(
               ["meta", "about", "projects", "skills", "testimonial"] as const
             ).map((t) => (
@@ -187,7 +193,7 @@ export function CMSPanel({ data, setData, onClose, dark }: CMSPanelProps) {
             ))}
           </div>
 
-          <div className="flex-1 p-5 overflow-y-auto">
+        <div className="flex-1 p-5 overflow-y-auto">
             {tab === "meta" && (
               <>
                 <FieldInput
@@ -534,7 +540,6 @@ export function CMSPanel({ data, setData, onClose, dark }: CMSPanelProps) {
               </>
             )}
           </div>
-        </div>
       </div>
     </div>
   );

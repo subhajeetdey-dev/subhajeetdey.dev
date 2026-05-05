@@ -153,16 +153,16 @@ export function HeroSection({
         >
           <button
             onClick={() => scrollTo("work")}
-            className="px-8 py-4 text-base font-semibold text-white transition-all rounded-full hover:opacity-90 active:scale-95"
+            className="px-8 py-4 text-base font-semibold text-white transition-all rounded-full cursor-pointer hover:opacity-90 active:scale-95"
             style={{ background: "#ef233c" }}
           >
-            <span className="flex items-center justify-center gap-2 ">
+            <span className="flex items-center justify-center gap-2">
               View My Work <FaArrowRight />
             </span>
           </button>
           <button
             onClick={() => scrollTo("contact")}
-            className="px-8 py-4 text-base font-semibold transition-all border rounded-full hover:border-opacity-60"
+            className="px-8 py-4 text-base font-semibold transition-all border rounded-full cursor-pointer hover:border-opacity-60"
             style={{
               color: textCol,
               borderColor: borderCol,

@@ -104,7 +104,7 @@ export function Navbar({
         <div className="flex items-center gap-2">
           <button
             onClick={toggle}
-            className="flex items-center justify-center text-base transition-all border rounded-full w-9 h-9"
+            className="flex items-center justify-center text-base transition-all border rounded-full cursor-pointer w-9 h-9"
             style={{
               borderColor: borderCol,
               color: mutedCol,
@@ -116,7 +116,7 @@ export function Navbar({
           </button>
           <button
             onClick={() => setCmsOpen(true)}
-            className="items-center hidden md:flex gap-1.5 px-4 py-2 rounded-full text-xs font-mono transition-all border"
+            className="items-center hidden md:flex gap-1.5 px-4 py-2 rounded-full text-xs font-mono transition-all border cursor-pointer"
             style={{ borderColor: borderCol, color: mutedCol }}
           >
             <span className="flex items-center justify-center gap-2">
