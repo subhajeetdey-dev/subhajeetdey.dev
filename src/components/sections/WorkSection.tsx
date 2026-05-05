@@ -35,7 +35,7 @@ export function WorkSection({
               <button
                 key={f}
                 onClick={() => setSkillFilter(f)}
-                className="px-5 py-2 font-mono text-sm transition-all border rounded-full"
+                className="px-5 py-2 font-mono text-sm transition-all border rounded-full cursor-pointer"
                 style={{
                   background: skillFilter === f ? "#ef233c" : "transparent",
                   borderColor: skillFilter === f ? "#ef233c" : borderCol,
