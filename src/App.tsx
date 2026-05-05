@@ -188,10 +188,17 @@ export default function Portfolio() {
             75%, 100% {transform: scale(2); opacity: 0;}
           }
 
-          @keyframe marquee{
-            from {transform:translateX(0);}
-            to{transform: translateX(-50%);}
+          @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
           }
+
+          .animate-marquee {
+            animation: marquee 30s linear infinite;
+            will-change: transform;
+          }
+
+          
 
           .animate-ping {animation: ping 1.4s cubic-bezier(0,0,0.2,1) infinite;}
           .animate-marquee {animation: marquee 30s linear infinite;}
