@@ -22,7 +22,7 @@ export default function Portfolio() {
   const [contactSent, setContactSent] = useState(false);
   const [emailVal, setEmailVal] = useState("");
   const [skillFilter, setSkillFilter] = useState<
-    "all" | "backend" | "frontend"
+    "all"| "full-stack" | "backend" | "frontend"
   >("all");
 
   useEffect(() => {
