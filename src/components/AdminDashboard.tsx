@@ -82,12 +82,10 @@ function FieldInput({
 function Toggle({
   value,
   onChange,
-  mutedCol,
   borderCol,
 }: {
   value: boolean;
   onChange: (v: boolean) => void;
-  mutedCol: string;
   borderCol: string;
 }) {
   return (
@@ -420,7 +418,6 @@ export function AdminDashboard({
                   <Toggle
                     value={data.meta.available}
                     onChange={(v) => update("meta", "available", v)}
-                    mutedCol={mutedCol}
                     borderCol={borderCol}
                   />
                 </div>
@@ -726,7 +723,6 @@ export function AdminDashboard({
                             onChange={(v) =>
                               updateNested("projects", i, "featured", v)
                             }
-                            mutedCol={mutedCol}
                             borderCol={borderCol}
                           />
                         </div>

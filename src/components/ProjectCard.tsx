@@ -13,7 +13,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, dark }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const { ref, visible } = useReveal(0);
+  const { ref } = useReveal(0);
   const accent = accentPalette[project.accent];
   const badge = typeBadge[project.type] ?? {
     label: project.type,
