@@ -245,3 +245,6 @@ export default function Portfolio() {
     </div>
   );
 }
+
+
+//TODO: Make the email section work

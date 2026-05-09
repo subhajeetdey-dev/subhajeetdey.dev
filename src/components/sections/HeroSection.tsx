@@ -1,4 +1,3 @@
-import React from "react";
 import { TerminalCursor } from "../ui/TerminalCursor";
 import { CodeLine } from "../ui/CodeLine";
 import { accentPalette } from "../../constants/theme";
