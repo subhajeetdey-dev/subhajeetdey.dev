@@ -31,21 +31,39 @@ export function WorkSection({
         <SectionHeader label="selected work" dark={dark}>
           Projects I've <span style={{ color: "#ef233c" }}>Built</span>
           <div className="flex justify-center gap-2 mt-6 mb-12">
-            {(["all", "full-stack", "backend", "frontend"] as const).map((f) => (
-              <button
-                key={f}
-                onClick={() => setSkillFilter(f)}
-                className="px-5 py-2 font-mono text-sm transition-all border rounded-full cursor-pointer"
-                style={{
-                  background: skillFilter === f ? "#ef233c" : "transparent",
-                  borderColor: skillFilter === f ? "#ef233c" : borderCol,
-                  color: skillFilter === f ? "#fff" : mutedCol,
-                }}
-              >
-                {f}
-              </button>
-            ))}
+            {(["all", "full-stack", "backend", "frontend"] as const).map(
+              (f) => (
+                <button
+                  key={f}
+                  onClick={() => setSkillFilter(f)}
+                  className="px-5 py-2 font-mono text-sm transition-all border rounded-full cursor-pointer"
+                  style={{
+                    background: skillFilter === f ? "#ef233c" : "transparent",
+                    borderColor: skillFilter === f ? "#ef233c" : borderCol,
+                    color: skillFilter === f ? "#fff" : mutedCol,
+                  }}
+                >
+                  {f}
+                </button>
+              ),
+            )}
           </div>
+          {filteredProjects.length === 0 && (
+            <div
+              className="flex flex-col items-center justify-center py-24 border-2 border-dashed rounded-2xl"
+              style={{ borderColor: "rgba(239,35,60,0.2)" }}
+            >
+              <p
+                className="mb-2 font-mono text-sm"
+                style={{ color: "#ef233c" }}
+              >
+                // no projects yet
+              </p>
+              <p className="font-mono text-xs" style={{ color: mutedCol }}>
+                Add projects from the Admin Dashboard
+              </p>
+            </div>
+          )}
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 auto-rows-fr">
             {filteredProjects.map((p) => (
               <ProjectCard key={p.id} project={p} dark={dark} />

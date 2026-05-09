@@ -1,4 +1,3 @@
-import React from "react";
 import type { PortfolioData } from "../types/portfolio.types";
 import { Sun } from "lucide-react";
 import { BsMoonStarsFill } from "react-icons/bs";
@@ -11,7 +10,7 @@ interface NavbarProps {
   activeSection: string;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
-  setCmsOpen: (open: boolean) => void;
+  setAdminOpen: (open: boolean) => void;
   scrollTo: (id: string) => void;
   data: PortfolioData;
   borderCol: string;
@@ -33,7 +32,7 @@ export function Navbar({
   activeSection,
   mobileMenuOpen,
   setMobileMenuOpen,
-  setCmsOpen,
+  setAdminOpen,
   scrollTo,
   data,
   borderCol,
@@ -115,13 +114,13 @@ export function Navbar({
             {dark ? <Sun /> : <BsMoonStarsFill />}
           </button>
           <button
-            onClick={() => setCmsOpen(true)}
+            onClick={() => setAdminOpen(true)}
             className="items-center hidden md:flex gap-1.5 px-4 py-2 rounded-full text-xs font-mono transition-all border cursor-pointer"
             style={{ borderColor: borderCol, color: mutedCol }}
           >
             <span className="flex items-center justify-center gap-2">
               <Sparkle size={16} color="#000000" strokeWidth={1} absoluteStrokeWidth /> {/* change color to adjust black sparkle*/}
-              Edit
+              Admin Control
             </span>
           </button>
           <button
@@ -151,7 +150,7 @@ export function Navbar({
                 </button>
             ))}
             <button
-            onClick={() => {setCmsOpen(true); setMobileMenuOpen(false);}}
+            onClick={() => {setAdminOpen(true); setMobileMenuOpen(false);}}
             className="py-2.5 text-sm font-mono text-left"
             style={{color: mutedCol}}
             >

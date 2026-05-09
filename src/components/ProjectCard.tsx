@@ -2,10 +2,9 @@ import React, { useRef, useCallback } from "react";
 import { useReveal } from "../hooks/useReveal";
 import { accentPalette, typeBadge } from "../constants/theme";
 import type { Project } from "../types/portfolio.types";
-import { ArrowRight, Hexagon  } from "lucide-react";
+import { ArrowRight, Hexagon } from "lucide-react";
 import { PiDiamondsFourDuotone } from "react-icons/pi";
 import { FaSquare } from "react-icons/fa";
-
 
 interface ProjectCardProps {
   project: Project;
@@ -14,9 +13,12 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, dark }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const { ref, visible } = useReveal();
+  const { ref, visible } = useReveal(0);
   const accent = accentPalette[project.accent];
-  const badge = typeBadge[project.type] ?? { label: project.type, color: "#71717a" };
+  const badge = typeBadge[project.type] ?? {
+    label: project.type,
+    color: "#71717a",
+  };
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const el = cardRef.current;
     if (!el) return;
@@ -38,8 +40,9 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
       }}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className={`relative overflow-hidden rounded-2xl border group cursor-pointer transition-all duration-700 ${project.featured ? "md:col-span-2 md:row-span-2" : ""}
-            ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+      className={`relative overflow-hidden rounded-2xl border group cursor-pointer transition-all duration-700
+                  ${project.featured ? "md:col-span-2 md:row-span-2" : ""}
+                   opacity-100 translate-y-0`}
       style={{
         padding: project.featured ? "36px" : "28px",
         borderColor: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)",
@@ -74,11 +77,13 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
               color: accent.hex,
             }}
           >
-            {project.type === "backend"
-              ?  <Hexagon />
-              : project.type === "frontend"
-                ? <PiDiamondsFourDuotone />
-                : <FaSquare />}
+            {project.type === "backend" ? (
+              <Hexagon />
+            ) : project.type === "frontend" ? (
+              <PiDiamondsFourDuotone />
+            ) : (
+              <FaSquare />
+            )}
           </div>
           <span
             className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"

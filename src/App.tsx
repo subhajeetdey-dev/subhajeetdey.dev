@@ -4,7 +4,9 @@ import { defaultData } from "./data/defaultData";
 import type { PortfolioData } from "./types/portfolio.types";
 
 import { Navbar } from "./components/Navbar";
-import { CMSPanel } from "./components/CMSPanel";
+import { useAuth } from "./hooks/useAuth";
+import { LoginModel } from "./components/LoginModel";
+import { AdminDashboard } from "./components/AdminDashboard";
 import { HeroSection } from "./components/sections/HeroSection";
 import { WorkSection } from "./components/sections/WorkSection";
 import { SkillsSection } from "./components/sections/SkillsSection";
@@ -15,14 +17,16 @@ import { Footer } from "./components/Footer";
 export default function Portfolio() {
   const { dark, toggle } = useDarkMode();
   const [data, setData] = useState<PortfolioData>(defaultData);
-  const [cmsOpen, setCmsOpen] = useState(false);
+  const { authed, login, logout } = useAuth();
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [dashOpen, setDashOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [contactSent, setContactSent] = useState(false);
   const [emailVal, setEmailVal] = useState("");
   const [skillFilter, setSkillFilter] = useState<
-    "all"| "full-stack" | "backend" | "frontend"
+    "all" | "full-stack" | "backend" | "frontend"
   >("all");
 
   useEffect(() => {
@@ -61,6 +65,25 @@ export default function Portfolio() {
     setContactSent(true);
     setEmailVal("");
     setTimeout(() => setContactSent(false), 3000);
+  };
+
+  const openAdmin = () => {
+    if (authed) setDashOpen(true);
+    else setLoginOpen(true);
+  };
+
+  const handleLogin = (password: string): boolean => {
+    const success = login(password);
+    if (success) {
+      setLoginOpen(false);
+      setDashOpen(true);
+    }
+    return success;
+  };
+
+  const handleLogout = () => {
+    logout();
+    setDashOpen(false);
   };
 
   const bg = dark ? "#080808" : "#f7f7f5";
@@ -103,7 +126,7 @@ export default function Portfolio() {
         activeSection={activeSection}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
-        setCmsOpen={setCmsOpen}
+        setAdminOpen={openAdmin}
         scrollTo={scrollTo}
         data={data}
         borderCol={borderCol}
@@ -167,11 +190,19 @@ export default function Portfolio() {
         mutedCol={mutedCol}
         textCol={textCol}
       />
-      {cmsOpen && (
-        <CMSPanel
+      {loginOpen && (
+        <LoginModel
+          onLogin={handleLogin}
+          onClose={() => setLoginOpen(false)}
+          dark={dark}
+        />
+      )}
+      {dashOpen && authed && (
+        <AdminDashboard
           data={data}
           setData={setData}
-          onClose={() => setCmsOpen(false)}
+          onClose={() => setDashOpen(false)}
+          onLogout={handleLogout}
           dark={dark}
         />
       )}
