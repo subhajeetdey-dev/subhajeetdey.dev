@@ -68,7 +68,7 @@ export function Navbar({
             style={{ background: "#ef233c", transform: "rotate(45deg)" }}
           >
             <span style={{ transform: "rotate(-45deg)", display: "block" }}>
-              S
+              SD
             </span>
           </div>
           <span

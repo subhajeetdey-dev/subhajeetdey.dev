@@ -117,6 +117,7 @@ interface AdminDashboardProps {
   setData: React.Dispatch<React.SetStateAction<PortfolioData>>;
   onClose: () => void;
   onLogout: () => void;
+  onReset: () => void;
   dark: boolean;
 }
 
@@ -137,6 +138,7 @@ export function AdminDashboard({
   setData,
   onClose,
   onLogout,
+  onReset,
   dark,
 }: AdminDashboardProps): JSX.Element {
   const [tab, setTab] = useState<TabId>("profile");
@@ -305,12 +307,27 @@ export function AdminDashboard({
                 )}
               </button>
               <button
+              onClick={() => {
+                if(confirm("Reset all portfolio data to default? This cannot be undone.")){
+                  onReset();
+                  onClose();
+                }
+              }}
+              className="flex items-center justify-center w-full gap-2 py-2.5 rounded-xl text-xs font-mono transition-all cursor-pointer border mt-1"
+              style={{ borderColor: "rgba(239,35,60,0.2)", color:"#ef233c"}}
+              onMouseEnter={(e) => e.currentTarget.style.background = "rgba(235,35,60,0.08)"}
+              onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+              >
+                Reset to Default
+              </button>
+              <button
                 onClick={onLogout}
                 className="flex items-center justify-center w-full gap-2 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer border"
                 style={{ borderColor: borderCol, color: mutedCol }}
               >
                 <LogOut size={13} /> Logout
               </button>
+              
             </div>
           </div>
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDarkMode } from "./hooks/useDarkMode";
-import { defaultData } from "./data/defaultData";
-import type { PortfolioData } from "./types/portfolio.types";
+import { usePortfolioData} from "./hooks/useaPortfolioData"
 
 import { Navbar } from "./components/Navbar";
 import { useAuth } from "./hooks/useAuth";
@@ -16,7 +15,7 @@ import { Footer } from "./components/Footer";
 
 export default function Portfolio() {
   const { dark, toggle } = useDarkMode();
-  const [data, setData] = useState<PortfolioData>(defaultData);
+  const {data, setData, resetData } = usePortfolioData();
   const { authed, login, logout } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const [dashOpen, setDashOpen] = useState(false);
@@ -203,6 +202,7 @@ export default function Portfolio() {
           setData={setData}
           onClose={() => setDashOpen(false)}
           onLogout={handleLogout}
+          onReset= {resetData}
           dark={dark}
         />
       )}
@@ -247,4 +247,4 @@ export default function Portfolio() {
 }
 
 
-//TODO: Make the email section work
+//TODO: Make the email section work and after every refresh the projects disnot save as there is no backend, i have to work on these
