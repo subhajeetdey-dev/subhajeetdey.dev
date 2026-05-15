@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDarkMode } from "./hooks/useDarkMode";
-import { usePortfolioData} from "./hooks/useaPortfolioData"
-
+import { usePortfolioData} from "./hooks/usePortfolioData"
 import { Navbar } from "./components/Navbar";
 import { useAuth } from "./hooks/useAuth";
 import { LoginModel } from "./components/LoginModel";
@@ -14,8 +13,8 @@ import { ContactSection } from "./components/sections/ContactSection";
 import { Footer } from "./components/Footer";
 
 export default function Portfolio() {
-  const { dark, toggle } = useDarkMode();
-  const {data, setData, resetData } = usePortfolioData();
+  const { dark, toggle } = useDarkMode();  
+  const {data, setData, loading, resetData } = usePortfolioData();
   const { authed, login, logout } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const [dashOpen, setDashOpen] = useState(false);
@@ -25,8 +24,8 @@ export default function Portfolio() {
   const [contactSent, setContactSent] = useState(false);
   const [emailVal, setEmailVal] = useState("");
   const [skillFilter, setSkillFilter] = useState<
-    "all" | "full-stack" | "backend" | "frontend"
-  >("all");
+    "all" | "fullstack" | "backend" | "frontend"
+  >("all");  
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 80);
@@ -90,7 +89,27 @@ export default function Portfolio() {
   const mutedCol = dark ? "#71717a" : "#737373";
   const borderCol = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
 
-  return (
+  if(loading){
+    return(
+      <div
+      style={{
+        minHeight: "100vh",
+        background: "#080808",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "monospace",
+        color: "#ef233c",
+        fontSize: 14,
+        letterSpacing: "0.05em",
+      }}
+      >
+        // loading portfolio...
+      </div>
+    )
+  }
+
+  return (    
     <div
       style={{
         background: bg,
@@ -100,7 +119,7 @@ export default function Portfolio() {
         overflowX: "hidden",
         transition: "background 0.3s, color 0.3s",
       }}
-    >
+    >     
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
         <div
           className="absolute inset-0"
