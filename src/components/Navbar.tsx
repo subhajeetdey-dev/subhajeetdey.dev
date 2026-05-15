@@ -119,7 +119,7 @@ export function Navbar({
             style={{ borderColor: borderCol, color: mutedCol }}
           >
             <span className="flex items-center justify-center gap-2">
-              <Sparkle size={16} color="#000000" strokeWidth={1} absoluteStrokeWidth /> {/* change color to adjust black sparkle*/}
+              <Sparkle size={16} color={dark ? "#fff" : "#000"} strokeWidth={1} absoluteStrokeWidth />
               Admin Control
             </span>
           </button>
