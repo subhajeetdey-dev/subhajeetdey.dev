@@ -44,7 +44,7 @@ export interface PortfolioData {
         location: string;
         stats: StatItem[];
     };
-    testimonial?: {
+    testimonial: {
         quote: string;
         author: string;
         role: string;

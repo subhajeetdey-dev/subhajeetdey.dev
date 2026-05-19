@@ -32,12 +32,14 @@ export function usePortfolioData() {
   useEffect(() => {
     if(loading) return;
 
+    console.log("Saving to Supabase:", data.projects.length, "projects");
+
     supabase
     .from("portfolio")
     .update({data, updated_at: new Date().toISOString()})
     .eq("id", ROW_ID)
-    .then(({error}) => {
-      if(error) console.error("Supabase save error:", error.message);      
+    .then(({ error, data: result }) => {
+      console.log("Save result:", result, "Error:", error);
     });
   }, [data, loading]);
 
