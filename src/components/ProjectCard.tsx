@@ -5,6 +5,7 @@ import type { Project } from "../types/portfolio.types";
 import { ArrowRight, ArrowUpRight, Hexagon } from "lucide-react";
 import { PiDiamondsFourDuotone } from "react-icons/pi";
 import { FaSquare } from "react-icons/fa";
+import { TiPin } from "react-icons/ti";
 
 interface ProjectCardProps {
   project: Project;
@@ -94,12 +95,26 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
               <FaSquare />
             )}
           </div>
-          <span
+          <div className="flex items-center gap-2">
+            {project.pinned && (
+              <span
+              className="text-[10px] font-mono px-2 py-1 rounded-full flex items-center gap-1 tracking-wide"
+              style={{
+                background: "rgba(245,158,11,0.1)",
+                color: "#f59e0b",
+                border: "1px solid rgba(245,158,11,0.2)"
+              }}
+              >
+                <span className="flex items-center justify-center gap-1"><TiPin className="text-red-600 " size={16} />pinned</span>
+              </span>
+            )}
+            <span
             className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
             style={{ background: badge.color + "15", color: badge.color }}
           >
             {badge.label}
-          </span>
+          </span>       
+            </div>
         </div>
 
         <div className="flex-1">

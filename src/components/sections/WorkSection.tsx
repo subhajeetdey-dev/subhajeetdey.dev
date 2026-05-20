@@ -19,12 +19,16 @@ export function WorkSection({
   borderCol,
   mutedCol,
 }: WorkSectionProps) {
-  const filteredProjects =
-    skillFilter === "all"
-      ? projects
-      : projects.filter(
-          (p) => p.type === skillFilter || p.type === "fullstack",
-        );
+  const filteredProjects = (() => {
+    const filtered = skillFilter === "all"?
+    projects: projects.filter((p) => skillFilter === "fullstack" ? p.type==="fullstack": p.type=== skillFilter || p.type === "fullstack",);
+    
+    return [...filtered].sort((a,b) => {
+      if(a.pinned && !b.pinned) return -1;
+      if(!a.pinned && b.pinned) return 1;
+      return 0;
+    });
+  })();
   return (
     <section id="work" className="px-6 py-28">
       <div className="max-w-6xl mx-auto">

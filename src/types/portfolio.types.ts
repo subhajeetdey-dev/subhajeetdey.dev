@@ -11,6 +11,7 @@ export interface Project {
     type: "backend" | "frontend" | "fullstack";
     accent: "red" | "blue" | "green" | "amber";
     featured: boolean;
+    pinned?: boolean;
     cta: string;
     link: string;
     metrics?: string;

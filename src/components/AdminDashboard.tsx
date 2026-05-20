@@ -317,16 +317,16 @@ export function AdminDashboard({
                 outlineOffset: "2px",
               }}
             >
-              {saved ? 
+              {saved ? (
                 <>
                   <Check size={13} />
                   Saved!
                 </>
-              : hasUnsaved 
-              ? "● Save Changes" :
-              "Save Changes"
-                
-              }
+              ) : hasUnsaved ? (
+                "● Save Changes"
+              ) : (
+                "Save Changes"
+              )}
             </button>
             <button
               onClick={() => {
@@ -757,20 +757,37 @@ export function AdminDashboard({
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="text-[10px] font-mono uppercase tracking-widest"
-                            style={{ color: mutedCol }}
-                          >
-                            Featured
-                          </span>
-                          <Toggle
-                            value={p.featured}
-                            onChange={(v) =>
-                              updateNested("projects", i, "featured", v)
-                            }
-                            borderCol={borderCol}
-                          />
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-[10px] font-mono uppercase tracking-widest"
+                              style={{ color: mutedCol }}
+                            >
+                              Featured
+                            </span>
+                            <Toggle
+                              value={p.featured}
+                              onChange={(v) =>
+                                updateNested("projects", i, "featured", v)
+                              }
+                              borderCol={borderCol}
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-[10px] font-mono uppercase tracking-widest"
+                              style={{ color: "#f59e0b" }}
+                            >
+                              📌 Pin
+                            </span>
+                            <Toggle
+                              value={p.pinned ?? false}
+                              onChange={(v) =>
+                                updateNested("projects", i, "pinned", v)
+                              }
+                              borderCol={borderCol}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1015,7 +1032,7 @@ export function AdminDashboard({
                   </button>
                   <button
                     onClick={() => {
-                      setData(previousData.current)
+                      setData(previousData.current);
                       setShowExitWarning(false);
                       setHasSaved(false);
                       onClose();
