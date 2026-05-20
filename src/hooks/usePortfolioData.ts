@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { defaultData } from "../data/defaultData";
 import type { PortfolioData } from "../types/portfolio.types";
 import {supabase} from "../lib/supabase"
@@ -8,10 +8,14 @@ const ROW_ID = 1;
 export function usePortfolioData() {
   const [data, setData] = useState<PortfolioData>(defaultData);
   const [loading, setLoading] = useState(true);
+  const isFirstLoad = useRef(true)
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    supabase.from("portfolio").select("data").eq("id", ROW_ID).single()
-    .then(({data: row, error}) => {
+    async function load() {
+      const {data: row, error} = await supabase
+      .from("portfolio").select("data").eq("id", ROW_ID).single();
+
       if(error){
         console.error("Supabase load error: ", error.message);
       } else if(row?.data) {
@@ -26,24 +30,44 @@ export function usePortfolioData() {
         });
       }
       setLoading(false);
-    });
-  });
+      setTimeout(() => {isFirstLoad.current = false;}, 100)
+    }
+
+    load();
+  }, []);
 
   useEffect(() => {
-    if(loading) return;
+    if(loading || isFirstLoad.current) return;
 
-    console.log("Saving to Supabase:", data.projects.length, "projects");
+    if(saveTimer.current) clearTimeout(saveTimer.current);    
 
-    supabase
-    .from("portfolio")
-    .update({data, updated_at: new Date().toISOString()})
-    .eq("id", ROW_ID)
-    .then(({ error, data: result }) => {
-      console.log("Save result:", result, "Error:", error);
-    });
+    saveTimer.current = setTimeout(async () => {
+      console.log("Saving to Supabase:", data.projects.length, "projects");
+
+      const {error} = await supabase
+      .from("portfolio")
+      .upsert({
+        id: ROW_ID,
+        data: data,
+        updated_at: new Date().toISOString(),
+      });
+
+      if(error) {
+        console.error("Save error:", error.message);        
+      } else {
+        console.log('Saved ✓');
+      }
+    },1000)
+
+    return () => {
+      if(saveTimer.current) clearTimeout(saveTimer.current)
+    };
   }, [data, loading]);
 
-  const resetData = () => setData(defaultData)
+  const resetData = () => {
+    isFirstLoad.current = false;
+    setData(defaultData);
+  }
 
   return { data, setData, loading, resetData };
 }

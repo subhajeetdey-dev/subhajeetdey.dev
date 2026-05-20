@@ -2,7 +2,7 @@ import React, { useRef, useCallback } from "react";
 import { useReveal } from "../hooks/useReveal";
 import { accentPalette, typeBadge } from "../constants/theme";
 import type { Project } from "../types/portfolio.types";
-import { ArrowRight, Hexagon } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Hexagon } from "lucide-react";
 import { PiDiamondsFourDuotone } from "react-icons/pi";
 import { FaSquare } from "react-icons/fa";
 
@@ -40,20 +40,29 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
       }}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
+      onClick={() =>
+        project.link &&
+        project.link !== "#" &&
+        window.open(project.link, "_blank", "noreferrer")
+      }
       className={`relative overflow-hidden rounded-2xl border group cursor-pointer transition-all duration-700
                   ${project.featured ? "md:col-span-2 md:row-span-2" : ""}
                    opacity-100 translate-y-0`}
       style={{
         padding: project.featured ? "36px" : "28px",
-        borderColor: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)",
+        borderColor: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.8)",
         background: dark
           ? project.featured
             ? "linear-gradient(145deg, rgba(20,20,20,0.95), rgba(8,8,8,0.98))"
             : "rgba(14,14,14,0.8)"
           : project.featured
-            ? "linear-gradient(145deg, rgba(255,255,255,0.95), rgba(245,245,245,0.9))"
-            : "rgba(255,255,255,0.85)",
-        backdropFilter: "blur(16px)",
+            ? "linear-gradient(135deg, rgba(255,255,255,0.75), rgba(255,255,255,0.45))"
+            : "rgba(255,255,255,0.55)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        boxShadow: dark
+          ? "none"
+          : "0 4px 24px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)",
         transitionDelay: `${project.id * 60}ms`,
       }}
     >
@@ -99,7 +108,7 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
             style={{
               color: dark ? "#f4f4f5" : "#0a0a0a",
               letterSpacing: "-0.025em",
-              fontFamily: "'Space Grotesk', 'sans-serif'",
+              fontFamily: "'Space Grotesk', sans-serif",
             }}
           >
             {project.title}
@@ -132,10 +141,10 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
               style={{
                 background: dark
                   ? "rgba(255,255,255,0.04)"
-                  : "rgba(0,0,0,0.04)",
+                  : "rgba(0,0,0,0.06)",
                 borderColor: dark
                   ? "rgba(255,255,255,0.08)"
-                  : "rgba(0,0,0,0.08)",
+                  : "rgba(0,0,0,0.1)",
                 color: dark ? "#a1a1aa" : "#525252",
               }}
             >
@@ -144,7 +153,7 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
           ))}
         </div>
 
-        <div className="flex items-center justify-between transition-all duration-300 -translate-y-1 opacity-0 group-hover:translate-y-0">
+        <div className="flex items-center justify-between transition-all duration-300 -translate-y-1 opacity-60 group-hover:translate-y-0" >
           <span
             className="font-mono text-xs tracking-widest uppercase"
             style={{ color: accent.hex }}
@@ -152,7 +161,7 @@ export function ProjectCard({ project, dark }: ProjectCardProps) {
             {project.cta}
           </span>
           <span style={{ color: accent.hex }}>
-            <ArrowRight />
+            {project.link && project.link !== "#" ? <ArrowUpRight /> : <ArrowRight />}
           </span>
         </div>
       </div>

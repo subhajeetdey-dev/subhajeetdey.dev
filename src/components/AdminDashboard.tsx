@@ -1,4 +1,4 @@
-import React, { useState, type JSX } from "react";
+import React, { useState, type JSX, useRef } from "react";
 import {
   X,
   User,
@@ -12,6 +12,7 @@ import {
   Loader2,
   Check,
   LogOut,
+  TriangleAlert,
 } from "lucide-react";
 import { accentPalette, typeBadge } from "../constants/theme";
 import type { PortfolioData, Project } from "../types/portfolio.types";
@@ -156,6 +157,9 @@ export function AdminDashboard({
   const inputBg = dark ? "#141414" : "#f4f4f5";
   const sidebarBg = dark ? "#060606" : "#f7f7f5";
   const fieldProps = { mutedCol, textCol, borderCol, inputBg };
+  const [hasUnsaved, setHasSaved] = useState(false);
+  const [showExitWarning, setShowExitWarning] = useState(false);
+  const previousData = useRef<PortfolioData>(data);
 
   const update = <S extends keyof PortfolioData>(
     section: S,
@@ -166,10 +170,11 @@ export function AdminDashboard({
       ...prev,
       [section]: { ...(prev[section] as object), [key]: val },
     }));
+    setHasSaved(true);
   };
 
-
-  const getBadge = (type: string) => typeBadge[type] ?? { label: type, color: "#71717a" };
+  const getBadge = (type: string) =>
+    typeBadge[type] ?? { label: type, color: "#71717a" };
 
   const updateNested = <S extends keyof PortfolioData>(
     section: S,
@@ -182,6 +187,7 @@ export function AdminDashboard({
       arr[index] = { ...(arr[index] as object), [key]: val };
       return { ...prev, [section]: arr };
     });
+    setHasSaved(true);
   };
 
   const addProjects = () => {
@@ -189,6 +195,7 @@ export function AdminDashboard({
       ...prev,
       projects: [...prev.projects, { ...NEW_PROJECT, id: Date.now() }],
     }));
+    setHasSaved(true);
   };
 
   const removeProject = (id: number) => {
@@ -196,11 +203,24 @@ export function AdminDashboard({
       ...prev,
       projects: prev.projects.filter((p) => p.id !== id),
     }));
+    setHasSaved(true);
   };
 
   const handleSave = () => {
+    previousData.current = data;
     setSaved(true);
+    setHasSaved(false);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleClose = () => {
+    if (hasUnsaved) setShowExitWarning(true);
+    else onClose();
+  };
+
+  const handleLogoutClick = () => {
+    if (hasUnsaved) setShowExitWarning(true);
+    else onLogout();
   };
 
   const handleGithubFetch = async (i: number) => {
@@ -219,120 +239,129 @@ export function AdminDashboard({
           desc: result.desc,
           link: result.link,
           type: result.type,
-          ...(result.stack.length > 0 ? {stack: result.stack}: {}),
+          ...(result.stack.length > 0 ? { stack: result.stack } : {}),
         };
-        return {...prev, projects};
+        return { ...prev, projects };
       });
-      setFetchStatus((prev) => ({ ...prev, [i]: "success"}));
+      setFetchStatus((prev) => ({ ...prev, [i]: "success" }));
     } else {
       setFetchStatus((prev) => ({ ...prev, [i]: "error" }));
     }
     setFetching((prev) => ({ ...prev, [i]: false }));
   };
 
-    return (
-      <div className="fixed inset-0 z-50 flex">
+  return (
+    <div className="fixed inset-0 z-50 flex">
+      <div
+        className="flex-1 cursor-pointer bg-black/70 backdrop-blur-sm"
+        onClick={handleClose}
+      />
+      <div
+        className="flex w-full h-full max-w-2xl overflow-hidden shadow-2xl shrink-0"
+        style={{ background: bg, borderLeft: `1px solid ${borderCol}` }}
+      >
         <div
-          className="flex-1 cursor-pointer bg-black/70 backdrop-blur-sm"
-          onClick={onClose}
-        />
-        <div
-          className="flex w-full h-full max-w-2xl overflow-hidden shadow-2xl shrink-0"
-          style={{ background: bg, borderLeft: `1px solid ${borderCol}` }}
+          className="flex flex-col h-full py-6 border-r w-52 shrink-0"
+          style={{ background: sidebarBg, borderColor: borderCol }}
         >
-          <div
-            className="flex flex-col h-full py-6 border-r w-52 shrink-0"
-            style={{ background: sidebarBg, borderColor: borderCol }}
-          >
-            <div className="px-5 mb-8">
-              <div className="flex items-center gap-2 mb-1">
-                <div
-                  className="flex items-center justify-center w-6 h-6 rounded-md"
-                  style={{ background: "#ef233c" }}
-                >
-                  <span className="text-white text-[10px] font-black">A</span>
-                </div>
-                <span
-                  className="text-sm font-bold"
-                  style={{
-                    color: textCol,
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}
-                >
-                  Admin
-                </span>
+          <div className="px-5 mb-8">
+            <div className="flex items-center gap-2 mb-1">
+              <div
+                className="flex items-center justify-center w-6 h-6 rounded-md"
+                style={{ background: "#ef233c" }}
+              >
+                <span className="text-white text-[10px] font-black">A</span>
               </div>
-              <p className="text-[10px] font-mono" style={{ color: mutedCol }}>
-                // portfolio dashboard
-              </p>
-            </div>
-
-            <nav className="flex flex-col flex-1 gap-1 px-3">
-              {TABS.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setTab(id)}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer text-left"
-                  style={{
-                    background:
-                      tab === id ? "rgba(239,35,60,0.1)" : "transparent",
-                    color: tab === id ? "#ef233c" : mutedCol,
-                    borderLeft:
-                      tab === id
-                        ? "2px solid #ef233c"
-                        : "2px solid transparent",
-                  }}
-                >
-                  <Icon size={15} />
-                  {label}
-                </button>
-              ))}
-            </nav>
-            <div className="flex flex-col gap-2 px-3 mt-4">
-              <button
-                onClick={handleSave}
-                className="flex items-center justify-center w-full gap-2 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer"
+              <span
+                className="text-sm font-bold"
                 style={{
-                  background: saved ? "#22c55e" : "#ef233c",
-                  color: "#fff",
+                  color: textCol,
+                  fontFamily: "'Space Grotesk', sans-serif",
                 }}
               >
-                {saved ? (
-                  <>
-                    <Check size={13} />
-                    Saved!
-                  </>
-                ) : (
-                  "Save Changes"
-                )}
-              </button>
+                Admin
+              </span>
+            </div>
+            <p className="text-[10px] font-mono" style={{ color: mutedCol }}>
+              // portfolio dashboard
+            </p>
+          </div>
+
+          <nav className="flex flex-col flex-1 gap-1 px-3">
+            {TABS.map(({ id, label, icon: Icon }) => (
               <button
+                key={id}
+                onClick={() => setTab(id)}
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer text-left"
+                style={{
+                  background:
+                    tab === id ? "rgba(239,35,60,0.1)" : "transparent",
+                  color: tab === id ? "#ef233c" : mutedCol,
+                  borderLeft:
+                    tab === id ? "2px solid #ef233c" : "2px solid transparent",
+                }}
+              >
+                <Icon size={15} />
+                {label}
+              </button>
+            ))}
+          </nav>
+          <div className="flex flex-col gap-2 px-3 mt-4">
+            <button
+              onClick={handleSave}
+              className="flex items-center justify-center w-full gap-2 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer"
+              style={{
+                background: saved ? "#22c55e" : "#ef233c",
+                color: "#fff",
+                outline: hasUnsaved && !saved ? "2px solid #f59e0b" : "none",
+                outlineOffset: "2px",
+              }}
+            >
+              {saved ? 
+                <>
+                  <Check size={13} />
+                  Saved!
+                </>
+              : hasUnsaved 
+              ? "● Save Changes" :
+              "Save Changes"
+                
+              }
+            </button>
+            <button
               onClick={() => {
-                if(confirm("Reset all portfolio data to default? This cannot be undone.")){
+                if (
+                  confirm(
+                    "Reset all portfolio data to default? This cannot be undone.",
+                  )
+                ) {
                   onReset();
                   onClose();
                 }
               }}
               className="flex items-center justify-center w-full gap-2 py-2.5 rounded-xl text-xs font-mono transition-all cursor-pointer border mt-1"
-              style={{ borderColor: "rgba(239,35,60,0.2)", color:"#ef233c"}}
-              onMouseEnter={(e) => e.currentTarget.style.background = "rgba(235,35,60,0.08)"}
-              onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-              >
-                Reset to Default
-              </button>
-              <button
-                onClick={onLogout}
-                className="flex items-center justify-center w-full gap-2 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer border"
-                style={{ borderColor: borderCol, color: mutedCol }}
-              >
-                <LogOut size={13} /> Logout
-              </button>
-              
-            </div>
+              style={{ borderColor: "rgba(239,35,60,0.2)", color: "#ef233c" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "rgba(235,35,60,0.08)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "transparent")
+              }
+            >
+              Reset to Default
+            </button>
+            <button
+              onClick={handleLogoutClick}
+              className="flex items-center justify-center w-full gap-2 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer border"
+              style={{ borderColor: borderCol, color: mutedCol }}
+            >
+              <LogOut size={13} /> Logout
+            </button>
           </div>
+        </div>
 
-          <div className="flex flex-col flex-1 h-full min-w-0 overflow-hidden">
-            <div
+        <div className="flex flex-col flex-1 h-full min-w-0 overflow-hidden">
+          <div
             className="flex items-center justify-between px-6 py-4 border-b shrink-0"
             style={{ borderColor: borderCol }}
           >
@@ -354,11 +383,11 @@ export function AdminDashboard({
               </p>
             </div>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="flex items-center justify-center w-8 h-8 transition-all border rounded-full cursor-pointer"
               style={{ borderColor: borderCol, color: mutedCol }}
             >
-              <X size={15} color="#ef233c"/>
+              <X size={15} color="#ef233c" />
             </button>
           </div>
           <div className="flex-1 p-6 overflow-y-auto">
@@ -587,7 +616,7 @@ export function AdminDashboard({
                             style={{ color: "#ef233c" }}
                           >
                             <div className="flex items-center gap-1.5">
-                              <X size={12}/> Repo not found or is private
+                              <X size={12} /> Repo not found or is private
                             </div>
                           </p>
                         )}
@@ -796,25 +825,25 @@ export function AdminDashboard({
                       </label>
                       <div className="px-5">
                         <input
-                        className="w-full px-3 py-2 font-mono text-sm border rounded-lg outline-none h-14"
-                        style={{
-                          background: inputBg,
-                          color: textCol,
-                          borderColor: borderCol,
-                        }}
-                        value={s.tags.join(", ")}
-                        onChange={(e) =>
-                          updateNested(
-                            "skills",
-                            i,
-                            "tags",
-                            e.target.value
-                              .split(",")
-                              .map((t) => t.trim())
-                              .filter(Boolean),
-                          )
-                        }
-                      />
+                          className="w-full px-3 py-2 font-mono text-sm border rounded-lg outline-none h-14"
+                          style={{
+                            background: inputBg,
+                            color: textCol,
+                            borderColor: borderCol,
+                          }}
+                          value={s.tags.join(", ")}
+                          onChange={(e) =>
+                            updateNested(
+                              "skills",
+                              i,
+                              "tags",
+                              e.target.value
+                                .split(",")
+                                .map((t) => t.trim())
+                                .filter(Boolean),
+                            )
+                          }
+                        />
                       </div>
                     </div>
                   </div>
@@ -895,9 +924,7 @@ export function AdminDashboard({
                     background: "rgba(239,35,60,0.03)",
                   }}
                 >
-                  <p>
-                    This quote appears in the About section.
-                  </p>
+                  <p>This quote appears in the About section.</p>
                 </div>
                 <FieldInput
                   {...fieldProps}
@@ -923,9 +950,94 @@ export function AdminDashboard({
               </div>
             )}
           </div>
-          </div>
         </div>
       </div>
-    );
-  };
-
+      {showExitWarning && (
+        <div className="fixed inset-0 flex items-center justify-center px-4 z-60">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowExitWarning(false)}
+          >
+            <div
+              className="relative w-full max-w-sm overflow-hidden border shadow-2xl rounded-2xl"
+              style={{ background: bg, borderColor: borderCol }}
+            >
+              <div
+                className="w-full h-1"
+                style={{
+                  background: "linear-gradient(90deg, #ef233c, #f59e0b)",
+                }}
+              />
+              <div className="p-6">
+                <div className="flex items-start gap-4 mb-5">
+                  <div
+                    className="flex items-center justify-center w-10 h-10 border rounded-xl shrink-0"
+                    style={{
+                      background: "rgba(239,35,60,0.08)",
+                      borderColor: "rgba(239,35,60,0.2)",
+                    }}
+                  >
+                    <span style={{ color: "#ef233c", fontSize: 18 }}>
+                      <TriangleAlert />
+                    </span>
+                  </div>
+                  <div>
+                    <h3
+                      className="mb-1 text-base font-bold"
+                      style={{
+                        color: textCol,
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      Unsaved Changes
+                    </h3>
+                    <p
+                      className="text-sm leading-relaxed"
+                      style={{ color: mutedCol }}
+                    >
+                      You have unsaved changes, what would you like to do?
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => {
+                      previousData.current = data;
+                      handleSave();
+                      setShowExitWarning(false);
+                      onClose();
+                    }}
+                    className="flex items-center justify-center w-full gap-2 py-3 font-mono text-sm font-bold transition-all cursor-pointer rounded-xl"
+                    style={{ background: "#ef233c", color: "#fff" }}
+                  >
+                    <Check size={15} /> Save & Close
+                  </button>
+                  <button
+                    onClick={() => {
+                      setData(previousData.current)
+                      setShowExitWarning(false);
+                      setHasSaved(false);
+                      onClose();
+                    }}
+                    className="flex items-center justify-center w-full gap-2 py-3 font-mono text-sm transition-all border cursor-pointer rounded-xl"
+                    style={{ borderColor: borderCol, color: mutedCol }}
+                  >
+                    Discard Changes
+                  </button>
+                  <button
+                    onClick={() => setShowExitWarning(false)}
+                    className="flex items-center justify-center w-full py-2.5 rounded-xl text-xs font-mono transition-all cursor-pointer"
+                    style={{ color: mutedCol }}
+                  >
+                    Keep Editing
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
