@@ -12,6 +12,7 @@ interface ContactSectionProps {
   setEmailVal: (v: string) => void;
   contactSent: boolean;
   handleContact: (e: React.FormEvent) => void;
+  contactLoading: boolean;
   borderCol: string;
   mutedCol: string;
   textCol: string;
@@ -24,6 +25,7 @@ export function ContactSection({
   setEmailVal,
   contactSent,
   handleContact,
+  contactLoading,
   borderCol,
   mutedCol,
   textCol,
@@ -56,10 +58,14 @@ export function ContactSection({
             fontFamily: "'Space Grotesk', sans-serif",
           }}
         >
-          Let's <span style={{ color: "#ef233c" }}>Build</span> Together
+          Let's <span style={{ color: "#ef233c" }}>Build</span> Together Beyond{" "}
+          <span style={{ color: "#ef233c" }}>Technology</span>
         </h2>
 
-        <p className="mb-12 text-xl" style={{ color: mutedCol }}>
+        <p
+          className="mb-12 text-xl whitespace-nowrap"
+          style={{ color: mutedCol }}
+        >
           Open to full-time roles, freelance contracts, and interesting
           collaborations.
           <br />I respond within 24 hours
@@ -84,9 +90,12 @@ export function ContactSection({
           />
           <button
             type="submit"
+            disabled={contactLoading || contactSent}
             className="px-8 py-4 text-base font-bold text-white transition-all rounded-full cursor-pointer"
             style={{
               background: contactSent ? "#22c55e" : "#ef233c",
+              opacity: contactLoading ? 0.7 : 1,
+              cursor: contactLoading ? "not-allowed" : "pointer",
               whiteSpace: "nowrap",
             }}
           >
@@ -94,6 +103,8 @@ export function ContactSection({
               <span className="flex items-center justify-center gap-1">
                 Sent! <FaCheck />
               </span>
+            ) : contactLoading ? (
+              "Sending..."
             ) : (
               "Get in Touch"
             )}
@@ -108,24 +119,34 @@ export function ContactSection({
               href: data.meta.linkedin,
               title: "LinkedIn",
             },
-            { icon: <FaXTwitter/>, href: data.meta.x, title: "X" },
+            { icon: <FaXTwitter />, href: data.meta.x, title: "X" },
             {
-              icon: <CiMail/>,
+              icon: <CiMail />,
               href: `mailto:${data.meta.email}`,
               title: "Email",
             },
-          ].map(({icon, href, title}) => (
-            <a key={href} href={href} target="_blank" rel="noreferrer" title={title} className="flex items-center justify-center w-12 h-12 font-mono text-sm font-bold transition-all border rounded-full" style={{borderColor: borderCol, color: mutedCol}} 
-            onMouseEnter={(e) => {
+          ].map(({ icon, href, title }) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              title={title}
+              className="flex items-center justify-center w-12 h-12 font-mono text-sm font-bold transition-all border rounded-full"
+              style={{ borderColor: borderCol, color: mutedCol }}
+              onMouseEnter={(e) => {
                 e.currentTarget.style.color = "#ef233c";
                 e.currentTarget.style.borderColor = "#ef233c";
                 e.currentTarget.style.background = "rgba(239,35,60,0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = mutedCol;
-              e.currentTarget.style.borderColor = borderCol;
-              e.currentTarget.style.background = "transparent";
-            }}>{icon}</a>
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = mutedCol;
+                e.currentTarget.style.borderColor = borderCol;
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {icon}
+            </a>
           ))}
         </div>
       </div>

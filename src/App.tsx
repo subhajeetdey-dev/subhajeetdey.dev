@@ -10,6 +10,7 @@ import { WorkSection } from "./components/sections/WorkSection";
 import { SkillsSection } from "./components/sections/SkillsSection";
 import { AboutSection } from "./components/sections/AboutSection";
 import { ContactSection } from "./components/sections/ContactSection";
+import { sendEmail } from './utils/sendEmail';
 import { Footer } from "./components/Footer";
 
 export default function Portfolio() {
@@ -23,6 +24,7 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero");
   const [contactSent, setContactSent] = useState(false);
   const [emailVal, setEmailVal] = useState("");
+  const [ contactLoading, setContactLoading ] = useState(false);
   const [skillFilter, setSkillFilter] = useState<
     "all" | "fullstack" | "backend" | "frontend"
   >("all");  
@@ -57,12 +59,21 @@ export default function Portfolio() {
     setMobileMenuOpen(false);
   };
 
-  const handleContact = (e: React.FormEvent) => {
+  const handleContact = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!emailVal) return;
-    setContactSent(true);
-    setEmailVal("");
-    setTimeout(() => setContactSent(false), 3000);
+    if (!emailVal || contactLoading) return;
+    setContactLoading(true);
+    const success = await sendEmail(emailVal);
+
+    if(success) {
+      setContactSent(true);
+      setEmailVal("");
+      setTimeout(() => setContactSent(false), 4000);
+    } else {
+      alert("Failed to send. Please email me directly at deysubhajeetwork@gmail.com");
+    }
+    
+    setContactLoading(false);
   };
 
   const openAdmin = () => {
@@ -194,6 +205,7 @@ export default function Portfolio() {
           setEmailVal={setEmailVal}
           contactSent={contactSent}
           handleContact={handleContact}
+          contactLoading={contactLoading}
           borderCol={borderCol}
           mutedCol={mutedCol}
           textCol={textCol}

@@ -193,7 +193,7 @@ export function AdminDashboard({
   const addProjects = () => {
     setData((prev) => ({
       ...prev,
-      projects: [...prev.projects, { ...NEW_PROJECT, id: Date.now() }],
+      projects: [ { ...NEW_PROJECT, id: Date.now() }, ...prev.projects],
     }));
     setHasSaved(true);
   };
@@ -206,7 +206,17 @@ export function AdminDashboard({
     setHasSaved(true);
   };
 
+  const removeEmptyProjects = () => {
+    setData((prev) => ({
+      ...prev,
+      projects: prev.projects.filter(
+        (p) => (p.title.trim() !== "New Project"  && p.title.trim() !== "") || p.link.trim() !== ""
+      ),
+    }))
+  }
+
   const handleSave = () => {
+    removeEmptyProjects();
     previousData.current = data;
     setSaved(true);
     setHasSaved(false);
@@ -214,6 +224,7 @@ export function AdminDashboard({
   };
 
   const handleClose = () => {
+    removeEmptyProjects();
     if (hasUnsaved) setShowExitWarning(true);
     else onClose();
   };
