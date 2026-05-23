@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDarkMode } from "./hooks/useDarkMode";
 import { usePortfolioData} from "./hooks/usePortfolioData"
 import { Navbar } from "./components/Navbar";
@@ -23,7 +23,6 @@ export default function Portfolio() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [contactSent, setContactSent] = useState(false);
-  const [emailVal, setEmailVal] = useState("");
   const [ contactLoading, setContactLoading ] = useState(false);
   const [skillFilter, setSkillFilter] = useState<
     "all" | "fullstack" | "backend" | "frontend"
@@ -59,22 +58,21 @@ export default function Portfolio() {
     setMobileMenuOpen(false);
   };
 
-  const handleContact = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!emailVal || contactLoading) return;
-    setContactLoading(true);
-    const success = await sendEmail(emailVal);
+  const handleContact = async (name: string, email: string, message: string) => {
+  if (contactLoading) return;
+  setContactLoading(true);
 
-    if(success) {
-      setContactSent(true);
-      setEmailVal("");
-      setTimeout(() => setContactSent(false), 4000);
-    } else {
-      alert("Failed to send. Please email me directly at deysubhajeetwork@gmail.com");
-    }
-    
-    setContactLoading(false);
-  };
+  const success = await sendEmail(name, email, message);
+
+  if (success) {
+    setContactSent(true);
+    setTimeout(() => setContactSent(false), 5000);
+  } else {
+    alert("Failed to send. Please email me directly at deysubhajeetwork@gmail.com");
+  }
+
+  setContactLoading(false);
+};
 
   const openAdmin = () => {
     if (authed) setDashOpen(true);
@@ -201,8 +199,6 @@ export default function Portfolio() {
         <ContactSection
           data={data}
           dark={dark}
-          emailVal={emailVal}
-          setEmailVal={setEmailVal}
           contactSent={contactSent}
           handleContact={handleContact}
           contactLoading={contactLoading}
